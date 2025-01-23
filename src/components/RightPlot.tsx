@@ -22,7 +22,7 @@ export const RightPlot = ({ layers, width, height, onLayerUpdate }: RightPlotPro
         ymax: 200    // Depth max
     });
 
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
         setScale({
@@ -31,16 +31,16 @@ export const RightPlot = ({ layers, width, height, onLayerUpdate }: RightPlotPro
         });
     }, [width, height]);
 
-    const calculateDisplayValues = (screenX: number, screenY: number) => {
-        // Convert screen coordinates to axis values
-        const xRatio = screenX / width;
-        const yRatio = screenY / height;
+    // const calculateDisplayValues = (screenX: number, screenY: number) => {
+    //     // Convert screen coordinates to axis values
+    //     const xRatio = screenX / width;
+    //     const yRatio = screenY / height;
         
-        const axisX = axisLimits.xmin + xRatio * (axisLimits.xmax - axisLimits.xmin);
-        const axisY = axisLimits.ymin + yRatio * (axisLimits.ymax - axisLimits.ymin);
+    //     const axisX = axisLimits.xmin + xRatio * (axisLimits.xmax - axisLimits.xmin);
+    //     const axisY = axisLimits.ymin + yRatio * (axisLimits.ymax - axisLimits.ymin);
         
-        return { axisX, axisY };
-    };
+    //     return { axisX, axisY };
+    // };
 
     const screenToAxisCoords = (value: number, isX: boolean) => {
         if (isX) {
@@ -211,55 +211,55 @@ export const RightPlot = ({ layers, width, height, onLayerUpdate }: RightPlotPro
         onLayerUpdate(newLayers);
     };
 
-    const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (!event.shiftKey && !event.altKey) return;
+    // const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    //     if (!event.shiftKey && !event.altKey) return;
         
-        // Get mouse position from a separate mouse tracking state
-        const clickDepth = axisLimits.ymin + (mousePos.y / height) * (axisLimits.ymax - axisLimits.ymin);
+    //     // Get mouse position from a separate mouse tracking state
+    //     const clickDepth = axisLimits.ymin + (mousePos.y / height) * (axisLimits.ymax - axisLimits.ymin);
         
-        if (event.shiftKey) {
-            // Split layer
-            const nearestLayer = layers.find(layer => Math.abs(layer.depth - clickDepth) < 10);
-            if (nearestLayer) {
-                const newLayer = { ...nearestLayer };
-                const index = layers.indexOf(nearestLayer);
-                const newLayers = [...layers];
-                newLayers.splice(index + 1, 0, newLayer);
-                onLayerUpdate(newLayers);
-            }
-        } else if (event.altKey) {
-            // Remove layer
-            const index = layers.findIndex(layer => Math.abs(layer.depth - clickDepth) < 10);
-            if (index !== -1) {
-                const newLayers = layers.filter((_, i) => i !== index);
-                onLayerUpdate(newLayers);
-            }
-        }
-    }, [layers, height, axisLimits, onLayerUpdate]);
+    //     if (event.shiftKey) {
+    //         // Split layer
+    //         const nearestLayer = layers.find(layer => Math.abs(layer.depth - clickDepth) < 10);
+    //         if (nearestLayer) {
+    //             const newLayer = { ...nearestLayer };
+    //             const index = layers.indexOf(nearestLayer);
+    //             const newLayers = [...layers];
+    //             newLayers.splice(index + 1, 0, newLayer);
+    //             onLayerUpdate(newLayers);
+    //         }
+    //     } else if (event.altKey) {
+    //         // Remove layer
+    //         const index = layers.findIndex(layer => Math.abs(layer.depth - clickDepth) < 10);
+    //         if (index !== -1) {
+    //             const newLayers = layers.filter((_, i) => i !== index);
+    //             onLayerUpdate(newLayers);
+    //         }
+    //     }
+    // }, [layers, height, axisLimits, onLayerUpdate]);
 
-    const handleMouseMove = useCallback((event: MouseEvent) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        setMousePos({
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top
-        });
-    }, []);
+    // const handleMouseMove = useCallback((event: MouseEvent) => {
+        // const rect = event.currentTarget.getBoundingClientRect();
+        // setMousePos({
+        //     x: event.clientX - rect.left,
+        //     y: event.clientY - rect.top
+        // });
+    // }, []);
 
     const handlePointerUp = () => {
         setSelectedLine(null);
     };
 
-    useEffect(() => {
-        const element = document.querySelector('.plot-container');
-        if (element) {
-            element.addEventListener('mousemove', handleMouseMove);
-            element.addEventListener('keydown', handleKeyDown);
-            return () => {
-                element.removeEventListener('mousemove', handleMouseMove);
-                element.removeEventListener('keydown', handleKeyDown);
-            };
-        }
-    }, [handleMouseMove, handleKeyDown]);
+    // useEffect(() => {
+    //     const element = document.querySelector('.plot-container');
+    //     if (element) {
+    //         element.addEventListener('mousemove', handleMouseMove);
+    //         element.addEventListener('keydown', handleKeyDown);
+    //         return () => {
+    //             element.removeEventListener('mousemove', handleMouseMove);
+    //             element.removeEventListener('keydown', handleKeyDown);
+    //         };
+    //     }
+    // }, [handleMouseMove, handleKeyDown]);
 
     return (
         <div className="flex flex-col gap-4">

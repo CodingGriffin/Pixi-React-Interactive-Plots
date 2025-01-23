@@ -1,6 +1,6 @@
 import { Application, extend } from '@pixi/react';
-import { Graphics, Container, Text } from 'pixi.js';
-import { useCallback, useState } from 'react';
+import { Graphics, Container} from 'pixi.js';
+import { useState } from 'react';
 import { Point } from '../types';
 
 extend({ Graphics, Container });
@@ -21,35 +21,35 @@ export const LeftPlot = ({ width, height }: LeftPlotProps) => {
     });
 
     // Calculate display values for coordinates
-    const calculateDisplayValues = (screenX: number, screenY: number) => {
-        // For x: right to left (screenX = 0 maps to xmax, screenX = width maps to xmin)
-        const xRatio = (width - screenX) / width;  // Invert X direction
-        const axisX = axisLimits.xmin + xRatio * (axisLimits.xmax - axisLimits.xmin);
+    // const calculateDisplayValues = (screenX: number, screenY: number) => {
+    //     // For x: right to left (screenX = 0 maps to xmax, screenX = width maps to xmin)
+    //     const xRatio = (width - screenX) / width;  // Invert X direction
+    //     const axisX = axisLimits.xmin + xRatio * (axisLimits.xmax - axisLimits.xmin);
 
-        // For y: bottom to top (screenY = height maps to ymin, screenY = 0 maps to ymax)
-        const yRatio = (height - screenY) / height;  // Invert Y direction
-        const axisY = axisLimits.ymin + yRatio * (axisLimits.ymax - axisLimits.ymin);
+    //     // For y: bottom to top (screenY = height maps to ymin, screenY = 0 maps to ymax)
+    //     const yRatio = (height - screenY) / height;  // Invert Y direction
+    //     const axisY = axisLimits.ymin + yRatio * (axisLimits.ymax - axisLimits.ymin);
 
-        return { axisX, axisY };
-    };
+    //     return { axisX, axisY };
+    // };
 
-    const handlePointerMove = useCallback((event: any) => {
-        const { x, y } = event.global;
+    // const handlePointerMove = useCallback((event: any) => {
+    //     const { x, y } = event.global;
         
-        // Find the nearest point within a certain radius
-        const nearestPoint = points.find(point => {
-            const screenX = width - ((point.x - axisLimits.xmin) / (axisLimits.xmax - axisLimits.xmin)) * width;
-            const screenY = height - ((point.y - axisLimits.ymin) / (axisLimits.ymax - axisLimits.ymin)) * height;
+    //     // Find the nearest point within a certain radius
+    //     const nearestPoint = points.find(point => {
+    //         const screenX = width - ((point.x - axisLimits.xmin) / (axisLimits.xmax - axisLimits.xmin)) * width;
+    //         const screenY = height - ((point.y - axisLimits.ymin) / (axisLimits.ymax - axisLimits.ymin)) * height;
             
-            const distance = Math.sqrt(
-                Math.pow(x - screenX, 2) + 
-                Math.pow(y - screenY, 2)
-            );
-            return distance < 10;
-        }) || null;
+    //         const distance = Math.sqrt(
+    //             Math.pow(x - screenX, 2) + 
+    //             Math.pow(y - screenY, 2)
+    //         );
+    //         return distance < 10;
+    //     }) || null;
         
-        setHoveredPoint(nearestPoint);
-    }, [points, width, height, axisLimits]);
+    //     setHoveredPoint(nearestPoint);
+    // }, [points, width, height, axisLimits]);
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -176,9 +176,9 @@ export const LeftPlot = ({ width, height }: LeftPlotProps) => {
                     <Application width={width} height={height} background="#ffffff">
                         <pixiContainer>
                             {/* Points Layer */}
-                            {points.map((point, index) => (
+                            {points.map((point) => (
                                 <pixiGraphics
-                                    key={`point-${index}`}
+                                    // key={`point-${index}`}
                                     draw={g => {
                                         g.clear();
                                         const screenX = width - ((point.x - axisLimits.xmin) / (axisLimits.xmax - axisLimits.xmin)) * width;
