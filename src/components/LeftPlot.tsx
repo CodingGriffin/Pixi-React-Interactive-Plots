@@ -171,7 +171,7 @@ export const LeftPlot = () => {
                                         if (point === hoveredPoint) {
                                             g.fill({ color: 0xFF0000 });
                                             g.circle(screenX, screenY, 7);
-                                            g.fill({ color: 0xFFFFFF, alpha: 0.8 });
+                                            g.fill({ color: 0xFF00FF, alpha: 0.8 });
                                             g.circle(screenX, screenY, 3);
                                         } else {
                                             g.fill({ color: 0xFF0000 });
