@@ -47,6 +47,7 @@ export const RightPlot = () => {
             if (plotRef.current) {
                 const { width, height } = plotRef.current.getBoundingClientRect();
                 setPlotDimensions({ width, height });
+                console.log(`Width: ${width}, Height: ${height}`);
             }
         };
 
@@ -277,11 +278,6 @@ export const RightPlot = () => {
                 const constrainedDepth = Math.min(maxDepth - 0.1, newDepth);
                 newLayers[0].startDepth = constrainedDepth;
                 setLayers(newLayers);
-                // Update ymin to show the dragged line
-                setAxisLimits(prev => ({
-                    ...prev,
-                    ymin: Math.min(prev.ymin, constrainedDepth * 0.9)
-                }));
                 // Update tooltip for depth
                 setHoveredLine({
                     type: 'depth',
@@ -296,11 +292,6 @@ export const RightPlot = () => {
                 const constrainedDepth = Math.max(minDepth + 0.1, newDepth);
                 newLayers[layers.length - 1].endDepth = constrainedDepth;
                 setLayers(newLayers);
-                // Update ymax to show the dragged line
-                setAxisLimits(prev => ({
-                    ...prev,
-                    ymax: Math.max(prev.ymax, constrainedDepth * 1.1)
-                }));
                 // Update tooltip for depth
                 setHoveredLine({
                     type: 'depth',
@@ -458,8 +449,8 @@ export const RightPlot = () => {
                 >
                     {/* Y-axis labels (left side) */}
                     <div className="absolute -left-8 top-0 h-full flex flex-col justify-between">
-                        <div className="text-xs">{axisLimits.ymax.toFixed(3)}</div>
                         <div className="text-xs">{axisLimits.ymin.toFixed(3)}</div>
+                        <div className="text-xs">{axisLimits.ymax.toFixed(3)}</div>
                     </div>
 
                     {/* X-axis labels (bottom) */}
@@ -468,7 +459,7 @@ export const RightPlot = () => {
                         <div className="text-xs">{axisLimits.xmax.toFixed(3)}</div>
                     </div>
 
-                    <Application
+                    {plotRef.current && <Application
                         className="w-full h-full"
                         width={plotDimensions.width}
                         height={plotDimensions.height}
@@ -531,7 +522,7 @@ export const RightPlot = () => {
                                 ))}
                             </pixiContainer>
                         </pixiContainer>
-                    </Application>
+                    </Application>}
 
                     {/* Tooltip */}
                     {hoveredLine && (

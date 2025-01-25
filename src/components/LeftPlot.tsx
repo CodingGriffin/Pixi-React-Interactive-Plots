@@ -14,12 +14,14 @@ export const LeftPlot = () => {
         ymin: 30,     // Velocity min
         ymax: 500     // Velocity max
     });
+    const [plotDimensions, setPlotDimensions] = useState({ width: 640, height: 480 });
     const plotRef = useRef<HTMLDivElement>(null);
     
     useEffect(() => {
         if (plotRef.current) {
             const { width, height } = plotRef.current.getBoundingClientRect();
             console.log(`Width: ${width}, Height: ${height}`);
+            setPlotDimensions({ width, height });
         }
     }, []);
 
@@ -78,7 +80,7 @@ export const LeftPlot = () => {
 
     return (
         <div className="flex flex-col items-center border-2 border-gray-300 rounded-lg p-4 shadow-sm">
-            <div className="flex-1">
+            <div className="w-full">
                 <div className="flex gap-4 flex-wrap justify-center mb-4">
                     <div className='flex flex-col'>
                         <div className="flex items-center justify-between">
@@ -138,7 +140,7 @@ export const LeftPlot = () => {
                         hover:file:bg-blue-100"
                 />
 
-                <div className="relative border border-gray-200 rounded-lg bg-white shadow-sm" ref={plotRef}>
+                <div className="relative border border-gray-200 rounded-lg bg-white shadow-sm w-full aspect-[4/3] min-h-[300px]" ref={plotRef}>
                     {/* Y-axis labels (left side) */}
                     <div className="absolute -left-8 top-0 h-full flex flex-col justify-between">
                         <div className="text-xs">{axisLimits.ymax.toFixed(3)}</div>
@@ -151,36 +153,20 @@ export const LeftPlot = () => {
                         <div className="text-xs">{axisLimits.xmax.toFixed(3)}</div>
                     </div>
 
-                    <Application
+                    {plotRef.current && <Application
                         className="w-full h-full"
-                        width={640}
-                        height={480}
+                        width={plotDimensions.width}
+                        height={plotDimensions.height}
                         background="white"
                     >
                         <pixiContainer>
-                            {/* Border */}
-                            <pixiGraphics
-                                draw={(g: Graphics) => {
-                                    g.clear();
-                                    g.setStrokeStyle({
-                                        width: 2,
-                                        color: 0x000000
-                                    });
-                                    g.moveTo(0, 0);
-                                    g.lineTo(640, 0);
-                                    g.lineTo(640, 480);
-                                    g.lineTo(0, 480);
-                                    g.lineTo(0, 0);
-                                    g.stroke();
-                                }}
-                            />
                             {points.map((point) => (
                                 <pixiGraphics
                                     // key={index}
                                     draw={(g: Graphics) => {
                                         g.clear();
-                                        const screenX = ((point.x - axisLimits.xmin) / (axisLimits.xmax - axisLimits.xmin)) * 640;
-                                        const screenY = ((point.y - axisLimits.ymin) / (axisLimits.ymax - axisLimits.ymin)) * 480;
+                                        const screenX = ((point.x - axisLimits.xmin) / (axisLimits.xmax - axisLimits.xmin)) * plotDimensions.width;
+                                        const screenY = ((point.y - axisLimits.ymin) / (axisLimits.ymax - axisLimits.ymin)) * plotDimensions.height;
 
                                         if (point === hoveredPoint) {
                                             g.fill({ color: 0xFF0000 });
@@ -199,15 +185,15 @@ export const LeftPlot = () => {
                                 />
                             ))}
                         </pixiContainer>
-                    </Application>
+                    </Application>}
 
                     {/* Tooltip */}
                     {hoveredPoint && (
                         <div
                             className="absolute bg-white border border-black rounded px-1.5 py-0.5 text-xs shadow-sm pointer-events-none"
                             style={{
-                                left: ((hoveredPoint.x - axisLimits.xmin) / (axisLimits.xmax - axisLimits.xmin)) * 640 + 2,
-                                top: ((hoveredPoint.y - axisLimits.ymin) / (axisLimits.ymax - axisLimits.ymin)) * 480 - 2,
+                                left: ((hoveredPoint.x - axisLimits.xmin) / (axisLimits.xmax - axisLimits.xmin)) * plotDimensions.width + 2,
+                                top: ((hoveredPoint.y - axisLimits.ymin) / (axisLimits.ymax - axisLimits.ymin)) * plotDimensions.height - 2,
                                 zIndex: 1000
                             }}
                         >
@@ -218,7 +204,7 @@ export const LeftPlot = () => {
                                         background: "rgb(255, 0, 0)"
                                     }}
                                 />
-                                {`(${hoveredPoint.y.toFixed(1)}, ${hoveredPoint.x.toFixed(1)})`}
+                                {`(${hoveredPoint.y.toFixed(3)}, ${hoveredPoint.x.toFixed(3)})`}
                             </div>
                         </div>
                     )}
